@@ -1,8 +1,6 @@
-var buttons = document.querySelectorAll('.btn')
+let buttons = document.querySelectorAll(".btn")
 
-for (i = 0; i<buttons.length; i++) {
-   var button = buttons.push
-} 
+let playButton = document.querySelector(".btn-play")
 
 let body = document.querySelector("body")
 
@@ -20,22 +18,14 @@ let levelTitle = document.querySelector('#level-title')
 
 // let userChosenColor = buttons.getAttribute('id')
 
-function playSound(name) {
-   let audio = new Audio(`sounds/${name}.mp3`)
-   audio.play()
-}
 
-function startOver() {
-   level = 0;
-   gamePattern = [];
-   started = false;
-}
 
-document.addEventListener("keydown", () => {
+playButton.addEventListener("click", () => {
    if (!started) {
       levelTitle.innerHTML = `Level ${level}`
-      nextSequence();
-      started = true;
+      nextSequence()
+      started = true
+      playButton.style.display = "none"
   }
 })
 
@@ -50,13 +40,13 @@ function nextSequence() {
    levelTitle.innerHTML = `Level ${level}`
 }
 
-$(".btn").click(function() {
-   let userChosenColor = this.getAttribute('id')
+buttons.forEach(button => button.addEventListener('click', () => {
+   let userChosenColor = button.getAttribute('id')
    userClickedPattern.push(userChosenColor)
    playSound(userChosenColor)
    $(`#${userChosenColor}`).fadeIn(50).fadeOut(50).fadeIn(50) // used jquery to animation
    checkAnswer(userClickedPattern.length-1);
-}) 
+}));
 
 function checkAnswer(currentLevel) {
    if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
@@ -68,7 +58,9 @@ function checkAnswer(currentLevel) {
    } else {
       playSound("wrong")
       body.classList.add("game-over")
-      levelTitle.innerHTML = ("Игра окончена. Нажмите любую клавишу.")
+      levelTitle.innerHTML = ("Игра окончена.")
+      playButton.style.display = "block"
+      playButton.innerHTML = ("Еще раз")
 
       setTimeout(() => {
         body.classList.remove("game-over")
@@ -76,4 +68,15 @@ function checkAnswer(currentLevel) {
 
       startOver()
    }
+}
+
+function playSound(name) {
+   let audio = new Audio(`sounds/${name}.mp3`)
+   audio.play()
+}
+
+function startOver() {
+   level = 0;
+   gamePattern = [];
+   started = false;
 }
